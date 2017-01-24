@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 15:07:02 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/23 15:14:37 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/24 14:59:23 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,27 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define BUFF_SIZE 50
+# define BUFF_SIZE 	32
+
+# define FD_MAX		256
+
+# define READ_OK	1
+# define READ_EOF	0
+# define READ_ERR	-1
+
+# define CHAR ((t_char *)(*lst)->content)
+# define FD ((t_fd *)(*lst)->content)
+
+typedef struct		s_char
+{
+	char			c;
+}					t_char;
+
+typedef struct		s_fd
+{
+	int				fd;
+	t_char			*next;
+}					t_fd;
 
 int		get_next_line(const int fd, char **line);
 #endif
