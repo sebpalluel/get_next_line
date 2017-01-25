@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 16:27:52 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/24 15:00:56 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/25 18:54:19 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int		main(int argc, char **argv)
 		fd = open(argv[1], O_RDONLY);
 	else
 		return (2);
+	printf("fd main %d\n",fd);
 	while (get_next_line(fd, &line) == 1)
 	{
 		ft_putendl(line);
@@ -32,4 +33,6 @@ int		main(int argc, char **argv)
 	}
 	if (argc == 2)
 		close(fd);
+	return (1);
 }
+
