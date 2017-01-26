@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 14:46:00 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/25 19:20:02 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/26 23:52:04 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,27 @@ int					get_fd(int fd, t_list **fd_lst)
 		(*fd_lst)->content = init_fd(fd);
 		(*fd_lst)->next = NULL;
 	}	
-	printf("fd_lst %d\n", FD(fd_lst)->fd);
+	//	printf("fd_lst %d\n", FD(fd_lst)->fd);
 	if (FD(fd_lst)->fd != fd)
 		return (get_fd(fd, &(*fd_lst)->next));
 	return (1);
+}
+
+int 				get_line(t_list **fd_lst, char *str)
+{
+	size_t 			i;
+
+	i = 0;
+	while (str[i])
+	{
+		CHAR(fd_lst)->c = str[i];
+		if (str[i] == '\n')
+		{
+			return (READ_OK);
+		}
+		i++;
+	}
+	return (READ_OK);
 }
 
 int 				buffer_from_fd(t_list **fd_lst, char **line)
@@ -47,12 +64,16 @@ int 				buffer_from_fd(t_list **fd_lst, char **line)
 		return (READ_ERR);
 	while ((ret = read(FD(fd_lst)->fd, str, BUFF_SIZE)) > 0)
 	{
-		str[ret] = '\0';
 		*line = ft_strjoin(*line, str);
+		//printf("%s\n",*line);
+		free(str);
+		if (ret)
+			return (READ_OK);
 	}
-	if (ret <= 0)
+	free(str);
+	if (ret < 0)
 		return (READ_ERR);
-	return (1);
+	return (READ_EOF);
 }
 
 int					get_next_line(const int fd, char **line)
@@ -63,6 +84,5 @@ int					get_next_line(const int fd, char **line)
 		return (READ_ERR);
 	if(!(get_fd(fd, &fd_lst)))
 		return (READ_ERR);
-	//return (buffer_from_fd(fd_lst, line));
-	return (0);
+	return (buffer_from_fd(&fd_lst, line));
 }

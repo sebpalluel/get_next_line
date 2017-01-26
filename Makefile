@@ -6,7 +6,7 @@
 #*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        *#
 #*                                                +#+#+#+#+#+   +#+           *#
 #*   Created: 2017/01/23 15:37:07 by psebasti          #+#    #+#             *#
-#*   Updated: 2017/01/23 16:29:09 by psebasti         ###   ########.fr       *#
+#*   Updated: 2017/01/26 18:47:19 by psebasti         ###   ########.fr       *#
 #*                                                                            *#
 #* ************************************************************************** *#
 
@@ -19,7 +19,7 @@ OBJ		=	$(SRC:.c=.o)
 
 CMP		=	gcc
 
-FLAGS	=	-Wall -Wextra -Werror
+FLAGS	=	-g -Wall -Wextra -Werror
 
 LIB = -L libft/ -lft
 

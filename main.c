@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 16:27:52 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/25 19:32:37 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/26 22:42:59 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 void	 process_file_input(int fd, char *argv, char *line)
 {
 	fd = open(argv, O_RDONLY);
-	printf("fd main %d\n",fd);
+	//printf("fd main %d\n",fd);
 	while (get_next_line(fd, &line) == 1)
+	{
 		ft_putendl(line);
+	}
 	close(fd);
 }
 

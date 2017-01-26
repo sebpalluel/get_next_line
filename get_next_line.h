@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 15:07:02 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/25 14:31:38 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/26 23:27:35 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include "libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdio.h>
 
 # define BUFF_SIZE 	32
 
@@ -30,6 +31,7 @@
 typedef struct		s_char
 {
 	char			c;
+	struct s_char	*next;
 }					t_char;
 
 typedef struct		s_fd
