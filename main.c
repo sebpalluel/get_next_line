@@ -6,42 +6,98 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 16:27:52 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 22:40:45 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 23:51:43 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "get_next_line.h"
 #include <fcntl.h>
 
-void	 process_file_input(int fd, char *argv, char *line)
+typedef struct		s_fdp
 {
-	int ret;
+	int				fd;
+	int				ret;
+}					t_fdp;
 
-	fd = open(argv, O_RDONLY);
-	//printf("fd main %d\n",fd);
-	while ((ret = get_next_line(fd, &line)))
+void	gnl(int fd, char **line)
+{
+	int		ret;
+
+	while ((ret = get_next_line(fd, line)))
 	{
-		ft_putendl(line);
-		free(line);
+		ft_putendl(*line);
+		free(*line);
 	}
 	close(fd);
 }
 
+int		still_reading(t_fdp *fds, int length)
+{
+	for (int i = 0; i < length; i++)
+		if (fds[i].ret == 1)
+			return (1);
+	return (0);
+}
+
 int		main(int argc, char **argv)
 {
-	int		fd;
+	t_fdp	fds[256] = {{ 0, 1 }};
 	char	*line = NULL;
 
 	if (argc == 1)
-		fd = 0;
-	if (argc == 2)
-		process_file_input(fd, argv[1], line);
-	if (argc == 3)
+		gnl(0, &line);
+	else if (argc == 2)
+		gnl(open(argv[1], O_RDONLY), &line);
+	else
 	{
-		process_file_input(fd, argv[1], line);
-		process_file_input(fd, argv[2], line);
+		for (int i = 0; i < argc - 1; i++)
+			fds[i].fd = open(argv[i + 1], O_RDONLY);
+		while (still_reading(fds, argc))
+		{
+			for (int i = 0; i < argc - 1; i++)
+			{
+				fds[i].ret = get_next_line(fds[i].fd, &line);
+				if (fds[i].ret == 1)
+				{
+					ft_putendl(line);
+					free(line);
+				}
+			}
+		}
+		for (int i = 0; i < argc - 1; i++)
+			close(fds[i].fd);
 	}
-	return (1);
+	while (42)
+		;
+	return (0);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
