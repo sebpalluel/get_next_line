@@ -6,33 +6,28 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 14:46:00 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 19:39:53 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 20:39:43 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int					get_fd(int fd, t_list **fd_lst)
+int					get_fd(int fd, t_fd *fd_tab)
 {
-	t_fd			*fd_elem = NULL;
 	t_char			*char_elem = NULL;
+	t_list			**fd_lst = NULL;
 
-	if (!*fd_lst)
-		*fd_lst = ft_lstnew(NULL, 0);
-	if(!(*fd_lst)->content)
+	fd_tab[fd].fd = fd;
+	if (!(fd_tab[fd].buffer))
 	{
-		if (!(fd_elem = (t_fd *)malloc(sizeof(t_fd))) || \
-				!(char_elem = (t_char *)malloc(sizeof(t_char))))
+		if (!(char_elem = (t_char *)malloc(sizeof(t_char))))
 			return (0);
-		fd_elem->fd = fd;
 		char_elem->next = NULL;
-		fd_elem->buffer = char_elem;
-		(*fd_lst)->content = fd_elem;
+		(*fd_lst)->content = char_elem;
 		(*fd_lst)->next = NULL;
+		fd_tab[fd].buffer = (t_char **)fd_lst;
 	}	
-	printf("fd_lst %d\n", FD(fd_lst)->fd);
-	if (FD(fd_lst)->fd != fd)
-		return (get_fd(fd, &(*fd_lst)->next));
+	printf("fd_lst %c\n", (fd_tab[fd].buffer->c);
 	return (1);
 }
 
@@ -87,11 +82,11 @@ int 				buffer_from_fd(t_list **fd_lst, char **line)
 
 int					get_next_line(const int fd, char **line)
 {
-	static t_list	*fd_lst = NULL;
+	static t_fd 	fd_tab[FD_MAX];
 
 	if (fd < 0 || fd > FD_MAX || line == NULL)
 		return (READ_ERR);
-	if(!(get_fd(fd, &fd_lst)))
+	if(!(get_fd(fd, fd_tab)))
 		return (READ_ERR);
 	return (buffer_from_fd(&fd_lst, line));
 }
