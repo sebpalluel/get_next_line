@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 14:46:00 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 18:41:05 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 19:39:53 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int 				get_line(t_list **fd_lst, char *str)
 {
 	size_t 			i;
 	size_t			getline;
-	t_char			*curr_char = NULL;
+	t_char			*curr_char;
 
 	i = 0;
 	getline = 0;
@@ -65,6 +65,7 @@ int 				buffer_from_fd(t_list **fd_lst, char **line)
 	int				ret;
 	char			*str;
 
+	printf("before %p\n",FD(fd_lst)->buffer);
 	if (!(str = ft_strnew(BUFF_SIZE)))
 		return (READ_ERR);
 	while ((ret = read(FD(fd_lst)->fd, str, BUFF_SIZE)) > 0)
@@ -72,6 +73,7 @@ int 				buffer_from_fd(t_list **fd_lst, char **line)
 		get_line(fd_lst, str);
 		*line = ft_strjoin(*line, str);
 		printf("%s\n", *line);
+		printf("after %p\n",FD(fd_lst)->buffer);
 		printf("first charac %c\n",FD(fd_lst)->buffer->c);
 		free(str);
 		if (ret)
