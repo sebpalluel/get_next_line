@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 15:07:02 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 13:22:07 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 18:43:27 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # define READ_EOF	0
 # define READ_ERR	-1
 
-# define CHAR(x) ((t_char *)(*x)->content)
 # define FD(x) ((t_fd *)(*x)->content)
+# define CHAR(x) (((t_fd *)(*x)->content)->buffer)
 
 typedef struct		s_char
 {
