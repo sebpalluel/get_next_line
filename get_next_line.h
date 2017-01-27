@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 15:07:02 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 19:39:51 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 20:05:31 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct		s_char
 typedef struct		s_fd
 {
 	int				fd;
-	t_char			*buffer;
+	t_char			**buffer;
 }					t_fd;
 
 int		get_next_line(const int fd, char **line);
