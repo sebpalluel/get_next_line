@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 15:07:02 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 20:38:19 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 22:35:51 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,13 @@
 # include <unistd.h>
 # include <stdio.h>
 
-# define BUFF_SIZE 	32
+# define BUFF_SIZE 	20000
 
 # define FD_MAX		256
 
 # define READ_OK	1
 # define READ_EOF	0
 # define READ_ERR	-1
-
-# define FD(x) ((t_fd *)(*x)->content)
-# define CHAR(x) (((t_fd *)(*x)->content)->buffer)
 
 typedef struct		s_char
 {
@@ -36,8 +33,7 @@ typedef struct		s_char
 
 typedef struct		s_fd
 {
-	int				fd;
-	t_char			**buffer;
+	t_char			*buffer;
 }					t_fd;
 
 int		get_next_line(const int fd, char **line);

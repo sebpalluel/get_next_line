@@ -6,78 +6,95 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 14:46:00 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 20:39:43 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 22:33:01 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int					get_fd(int fd, t_fd *fd_tab)
+int					read_buff(int fd, t_fd *fd_tab)
 {
-	t_char			*char_elem = NULL;
-	t_list			**fd_lst = NULL;
+	t_char			*buffer;
+	char			src[BUFF_SIZE + 1] = {'\0'};
+	int				ret;
+	size_t			i;
 
-	fd_tab[fd].fd = fd;
-	if (!(fd_tab[fd].buffer))
-	{
-		if (!(char_elem = (t_char *)malloc(sizeof(t_char))))
-			return (0);
-		char_elem->next = NULL;
-		(*fd_lst)->content = char_elem;
-		(*fd_lst)->next = NULL;
-		fd_tab[fd].buffer = (t_char **)fd_lst;
-	}	
-	printf("fd_lst %c\n", (fd_tab[fd].buffer->c);
-	return (1);
-}
-
-int 				get_line(t_list **fd_lst, char *str)
-{
-	size_t 			i;
-	size_t			getline;
-	t_char			*curr_char;
-
+	buffer = fd_tab[fd].buffer;
+	while (buffer && buffer->next)
+		buffer = buffer->next;
+	//ft_bzero(src, BUFF_SIZE + 1);
+	ret = read(fd, src, BUFF_SIZE);
 	i = 0;
-	getline = 0;
-	while (str[i])
+	while (src[i])
 	{
-		if (!(curr_char = ft_memalloc(sizeof(t_char))))
-			return (READ_ERR);
-		curr_char->c = str[i];
-		curr_char->next = CHAR(fd_lst);
-		CHAR(fd_lst) = curr_char;
-		//	printf("list %c\n", CHAR(fd_lst)->c);
-		if (str[i] == '\n')
-			getline = 1;
-		free(curr_char);
+		if (buffer == NULL)
+		{
+			fd_tab[fd].buffer = (t_char *)ft_memalloc(sizeof(t_char));
+			buffer = fd_tab[fd].buffer;
+		}
+		else
+		{
+			buffer->next = (t_char *)ft_memalloc(sizeof(t_char));
+			buffer = buffer->next;
+		}
+		buffer->c = src[i];
+		buffer->next = NULL;
 		i++;
 	}
-	return (getline);
+	return (ret);
 }
 
-int 				buffer_from_fd(t_list **fd_lst, char **line)
+int					buffer_has_line(t_fd *fd, char **target)
+{
+	size_t			length;
+	t_char 			*current;
+	t_char			*prev;
+	t_char			*buffer;
+	char 			*line;
+
+	buffer = fd->buffer;
+	if (buffer == NULL)
+		*target = NULL;
+	current = buffer;
+	length = 0;
+	while (current != NULL && current->c != '\n')
+	{
+		current = current->next;
+		length++;
+	}
+	if (current && current->c == '\n')
+	{
+		line = ft_strnew(length);
+		length = 0;
+		while (buffer->c != '\n')
+		{
+			line[length++] = buffer->c;
+			prev = buffer;
+			buffer = buffer->next;
+			free(prev);
+		}
+		prev = buffer;
+		buffer = buffer->next;
+		free (prev);
+		fd->buffer = buffer;
+		*target = line;
+		return (1);
+	}
+	return (0);
+}
+
+int					read_line(int fd, t_fd *fd_tab, char **line)
 {
 	int				ret;
-	char			*str;
 
-	printf("before %p\n",FD(fd_lst)->buffer);
-	if (!(str = ft_strnew(BUFF_SIZE)))
-		return (READ_ERR);
-	while ((ret = read(FD(fd_lst)->fd, str, BUFF_SIZE)) > 0)
-	{
-		get_line(fd_lst, str);
-		*line = ft_strjoin(*line, str);
-		printf("%s\n", *line);
-		printf("after %p\n",FD(fd_lst)->buffer);
-		printf("first charac %c\n",FD(fd_lst)->buffer->c);
-		free(str);
-		if (ret)
-			return (READ_OK);
-	}
-	free(str);
-	if (ret < 0)
-		return (READ_ERR);
-	return (READ_EOF);
+	ret = 1;
+	while (!buffer_has_line(&fd_tab[fd], line) && ret > 0)
+		ret = read_buff(fd, fd_tab);
+	if (ret == 0)
+		return (READ_EOF);
+	if (ret > 0)
+		return (READ_OK);
+	return (READ_ERR);
 }
 
 int					get_next_line(const int fd, char **line)
@@ -86,7 +103,7 @@ int					get_next_line(const int fd, char **line)
 
 	if (fd < 0 || fd > FD_MAX || line == NULL)
 		return (READ_ERR);
-	if(!(get_fd(fd, fd_tab)))
-		return (READ_ERR);
-	return (buffer_from_fd(&fd_lst, line));
+	if (buffer_has_line(&fd_tab[fd], line))
+		return (READ_OK);
+	return (read_line(fd, fd_tab, line));
 }

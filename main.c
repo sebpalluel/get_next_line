@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 16:27:52 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 18:26:26 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/27 22:40:45 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@
 
 void	 process_file_input(int fd, char *argv, char *line)
 {
+	int ret;
+
 	fd = open(argv, O_RDONLY);
 	//printf("fd main %d\n",fd);
-	while (get_next_line(fd, &line) == 1)
+	while ((ret = get_next_line(fd, &line)))
 	{
-		//ft_putendl(line);
+		ft_putendl(line);
+		free(line);
 	}
 	close(fd);
 }
@@ -39,7 +42,6 @@ int		main(int argc, char **argv)
 		process_file_input(fd, argv[1], line);
 		process_file_input(fd, argv[2], line);
 	}
-	free(line);
 	return (1);
 }
 
