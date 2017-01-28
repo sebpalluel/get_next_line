@@ -6,13 +6,13 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 14:46:00 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/27 23:51:05 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/01/28 16:21:43 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int			copy_buff(int fd, t_fd *fd_tab, char *src, t_char *buffer)
+static int			copy_buff(t_fd *fd, char *src, t_char *buffer)
 {
 	size_t			i;
 
@@ -21,8 +21,8 @@ static int			copy_buff(int fd, t_fd *fd_tab, char *src, t_char *buffer)
 	{
 		if (buffer == NULL)
 		{
-			fd_tab[fd].buffer = (t_char *)ft_memalloc(sizeof(t_char));
-			buffer = fd_tab[fd].buffer;
+			fd->buffer = (t_char *)ft_memalloc(sizeof(t_char));
+			buffer = fd->buffer;
 		}
 		else
 		{
@@ -30,12 +30,12 @@ static int			copy_buff(int fd, t_fd *fd_tab, char *src, t_char *buffer)
 			buffer = buffer->next;
 		}
 		if (buffer == NULL)
-			return (0);
+			return (READ_ERR);
 		buffer->c = src[i];
 		buffer->next = NULL;
 		i++;
 	}
-	return (1);
+	return (READ_OK);
 }
 
 static int			read_buff(int fd, t_fd *fd_tab)
@@ -47,13 +47,11 @@ static int			read_buff(int fd, t_fd *fd_tab)
 	buffer = fd_tab[fd].buffer;
 	while (buffer && buffer->next)
 		buffer = buffer->next;
-	src = (char *)malloc(sizeof (char) * (BUFF_SIZE));
-	if (src == NULL)
-		return (-1);
-	ft_bzero(src, BUFF_SIZE);
-	ret = read(fd, src, BUFF_SIZE - 1);
-	if (copy_buff(fd, fd_tab, src, buffer) == 0)
-		return (-1);
+	if (!(src = ft_strnew(BUFF_SIZE)))
+		return (READ_ERR);
+	ret = read(fd, src, BUFF_SIZE);
+	if (copy_buff(&fd_tab[fd], src, buffer) < 0)
+		return (READ_ERR);
 	free(src);
 	return (ret);
 }
