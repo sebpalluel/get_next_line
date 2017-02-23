@@ -6,7 +6,7 @@
 /*   By: psebasti <sebpalluel@free.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/23 16:27:52 by psebasti          #+#    #+#             */
-/*   Updated: 2017/01/28 16:29:58 by psebasti         ###   ########.fr       */
+/*   Updated: 2017/02/23 14:57:29 by psebasti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int		main(int argc, char **argv)
 		for (int i = 0; i < argc - 1; i++)
 			close(fds[i].fd);
 	}
-//	while (42);
+	while (42);
 	return (0);
 }
+// valgrind --tool=memcheck --leak-check=full app arg1 arg2
